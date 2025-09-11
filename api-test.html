@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLearn API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .loading {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        .api-response {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 EcoLearn API Connection Test</h1>
+        
+        <div id="status" class="status loading">
+            🔄 Testing API connection...
+        </div>
+        
+        <div class="api-response" id="response">
+            Click "Test API" to check the connection
+        </div>
+        
+        <button onclick="testAPI()">Test API Connection</button>
+        <button onclick="testAllEndpoints()">Test All Endpoints</button>
+        <button onclick="openFrontend()">Open Frontend App</button>
+        
+        <h2>Available Endpoints:</h2>
+        <ul>
+            <li><strong>Health Check:</strong> GET /api/health</li>
+            <li><strong>Authentication:</strong> POST /api/auth/login, /api/auth/register</li>
+            <li><strong>Users:</strong> GET /api/users/leaderboard</li>
+            <li><strong>Quizzes:</strong> GET /api/quizzes</li>
+            <li><strong>Challenges:</strong> GET /api/challenges</li>
+            <li><strong>Community:</strong> GET /api/community/posts</li>
+            <li><strong>Weather:</strong> GET /api/weather/current</li>
+            <li><strong>Admin:</strong> GET /api/admin/dashboard</li>
+        </ul>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = '🔄 Testing API connection...';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/health');
+                const data = await response.json();
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✅ API Connection Successful!';
+                
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ API Connection Failed';
+                
+                responseDiv.textContent = `Error: ${error.message}\n\nPossible causes:\n1. Backend server not running\n2. CORS issues\n3. Network connectivity problems\n\nTo fix:\n1. Make sure backend is running on port 5000\n2. Check if http://localhost:5000/api/health works in browser\n3. Restart the backend server`;
+            }
+        }
+        
+        async function testAllEndpoints() {
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = '🔄 Testing all endpoints...';
+            
+            const endpoints = [
+                { name: 'Health Check', url: '/api/health' },
+                { name: 'Quizzes', url: '/api/quizzes' },
+                { name: 'Challenges', url: '/api/challenges' },
+                { name: 'Community Posts', url: '/api/community/posts' },
+                { name: 'Weather', url: '/api/weather/current' },
+                { name: 'Admin Dashboard', url: '/api/admin/dashboard' }
+            ];
+            
+            let results = 'API Endpoint Test Results:\n\n';
+            let allPassed = true;
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`http://localhost:5000${endpoint.url}`);
+                    const data = await response.json();
+                    results += `✅ ${endpoint.name}: OK (${response.status})\n`;
+                } catch (error) {
+                    results += `❌ ${endpoint.name}: FAILED - ${error.message}\n`;
+                    allPassed = false;
+                }
+            }
+            
+            if (allPassed) {
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✅ All Endpoints Working!';
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Some Endpoints Failed';
+            }
+            
+            responseDiv.textContent = results;
+        }
+        
+        function openFrontend() {
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        // Test API on page load
+        window.onload = function() {
+            testAPI();
+        };
+    </script>
+</body>
+</html>

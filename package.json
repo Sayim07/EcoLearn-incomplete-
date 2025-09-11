@@ -1,0 +1,18 @@
+{
+  "name": "ecolearn",
+  "version": "1.0.0",
+  "description": "A gamified environmental education platform for schools and colleges",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": ["environment", "education", "gamification", "react", "nodejs"],
+  "author": "EcoLearn Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

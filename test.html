@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLearn - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #fefce8 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .logo {
+            font-size: 3rem;
+            color: #22c55e;
+            margin-bottom: 20px;
+        }
+        .status {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        .success {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .info {
+            color: #3b82f6;
+        }
+        button {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🌱 EcoLearn</div>
+        <h1>Environmental Education Platform</h1>
+        
+        <div class="status">
+            <h2>Backend Status</h2>
+            <div id="backend-status">Checking...</div>
+        </div>
+        
+        <div class="status">
+            <h2>Frontend Status</h2>
+            <div id="frontend-status">React app needs to be started</div>
+        </div>
+        
+        <div class="status">
+            <h2>Quick Actions</h2>
+            <button onclick="testBackend()">Test Backend API</button>
+            <button onclick="openFrontend()">Open Frontend (if running)</button>
+        </div>
+        
+        <div class="status">
+            <h2>Instructions</h2>
+            <p class="info">
+                <strong>Backend:</strong> Running on port 5000 ✅<br>
+                <strong>Frontend:</strong> Need to start React app on port 3000<br>
+                <strong>Next Steps:</strong> Open a new terminal and run: <code>cd frontend && npm start</code>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:5000/api/health');
+                const data = await response.json();
+                document.getElementById('backend-status').innerHTML = 
+                    `<span class="success">✅ Backend is running!</span><br>
+                     Status: ${data.status}<br>
+                     Uptime: ${Math.round(data.uptime)}s`;
+            } catch (error) {
+                document.getElementById('backend-status').innerHTML = 
+                    `<span class="error">❌ Backend connection failed</span><br>
+                     Error: ${error.message}`;
+            }
+        }
+        
+        function openFrontend() {
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        // Test backend on page load
+        testBackend();
+    </script>
+</body>
+</html>
